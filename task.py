@@ -5,19 +5,12 @@ def main():
     excel_files = 'Missing.xlsx'
     address = pd.read_excel(excel_files)
    # clean data
-
     address.fillna('none', inplace=True)
-    #address['Town'].astype('category')
-    address.to_string(columns='Town')
-    address = address[17559:17560]
+    address.loc[address.apply(lambda x: x['Town'] <= 99999999, axis=1), 'Town'] = 'Fan Cheng is fat'
    # insert two column (contain city? and pass?)
     (num_row, num_column) = address.shape
     address.insert(loc=num_column, column= 'contain?', value=int)
     address.insert(loc=num_column+1, column = 'pass or fail?', value=str)
-
-    print(address)
-    print(address['Town'])
-
    # address contain city or not?
     address.loc[address.apply(lambda x: x['Town'] in x['FullAddress'], axis=1), 'contain?'] = 1
     address.loc[address.apply(lambda x: x['Town'] not in x['FullAddress'], axis=1), 'contain?'] = 0
@@ -33,11 +26,8 @@ def main():
    # delete frequency column
     del address['freq']
 
-
-    #print(address)
+    print(address)
     address.to_excel('output.xlsx')
 
-
-    print(address)
 if __name__ == '__main__':
     main()
